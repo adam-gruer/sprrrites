@@ -1,0 +1,53 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(gganimate)
+library(jsonlite)
+library(purrr)
+library(dplyr)
+```
+Read json spriteheet coords file
+```{r}
+sprite_coords <- jsonlite::read_json(path = "assets/slime_gobbler/red/spritesheet/slime.json")
+```
+
+```{r}
+str(sprite_coords)
+```
+
+```{r}
+names(sprite_coords)
+```
+```{r}
+get_frames <- function(coords, sep = "/"){
+  
+  dplyr::tibble(index =  names(coords)) %>%
+    mutate(move = stringr::str_split_fixed(index,"/",2)[,1],
+           frame = stringr::str_split_fixed(index,"/",2)[,2] %>%
+                    stringr::str_extract("[0-9]+") %>%
+                    as.numeric())
+          }
+frames <- get_frames(sprite_coords)    
+
+frames
+
+```
+
+```{r}
+ gganimate::sprite_file(file = "assets/slime_gobbler/red/spritesheet/slime.png",
+                       fps = 5,
+                       width = 80,
+                       height = 64,
+                       full_width = 480
+                       )
+
+
+```
+
+```{r}
+gganimate::
+```
+
